@@ -61,11 +61,17 @@ def create_temp_token(email: str) -> str:
         code=token,
         email=email,
         generated_at=datetime.datetime.now(),
+        used=0,
     )
     session.add(temp_token)
     session.commit()
     return token
 
+def set_temp_token_used(token: str) -> None:
+    """Set the temp token as used"""
+    temp_token: Temp_tokens = session.query(Temp_tokens).filter_by(code=token).first()
+    temp_token.used = 1
+    session.commit()
 
 def get_temp_token(token: str) -> Temp_tokens:
     """Get the temp token from the database"""

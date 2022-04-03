@@ -66,6 +66,9 @@ def confirm(token: str):
     temp_token: Temp_tokens = db_handler.get_temp_token(token)
     if temp_token is None:
         return message_handler("Invalid token")
+    # Check if the token has been used
+    if temp_token.used:
+        return message_handler("Token has already been used")
     # Check if the token is expired
     if (
         temp_token.generated_at + datetime.timedelta(minutes=5)
@@ -74,4 +77,6 @@ def confirm(token: str):
         return message_handler("Token expired")
     # If all the conditions are met, create a user
     db_handler.create_user(temp_token.email)
+    # Set the token as used
+    db_handler.set_temp_token_used(token)
     return message_handler("Your email has been confirmed")

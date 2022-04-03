@@ -16,6 +16,7 @@ class Temp_tokens(Base):
     id = Column(Integer, primary_key=True)
     code = Column(String(64), nullable=False)
     email = Column(String(250), nullable=False)
+    used = Column(TINYINT(1), nullable=False)
     generated_at = Column(DateTime, nullable=False)
 
 
