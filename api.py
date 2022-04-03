@@ -16,12 +16,14 @@ app: FastAPI = FastAPI()
 # Get the environment variable from docker-compose
 ALLOW_REGISTRATION: str = getenv("ALLOW_REGISTRATION")
 
+
 def message_handler(message: str) -> dict:
     """
     This function is used to handle the messages send to the user.
     It will return a message to the user.
     """
-    return {"message" : message}
+    return {"message": message}
+
 
 @app.get("/register")
 def register(email: str):
@@ -53,8 +55,13 @@ def register(email: str):
     )
     return message_handler("A token has been sent to your email")
 
+
 @app.get("/confirm")
 def confirm(token: str):
+    """
+    This function is used to confirm the email of the user.
+    It will create a user in the database if the token is valid.
+    """
     # Check if the token exists
     temp_token: Temp_tokens = db_handler.get_temp_token(token)
     if temp_token is None:
