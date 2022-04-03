@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from os import getenv
 from re import match
 import datetime
+from database_setup import Temp_tokens
 
 # import the database handler
 import db_handler as db_handler
@@ -9,11 +10,10 @@ import db_handler as db_handler
 # import the email handler
 import email_handler as email_handler
 
-app = FastAPI()
+app: FastAPI = FastAPI()
 
 # Get the environment variable from docker-compose
 ALLOW_REGISTRATION: str = getenv("ALLOW_REGISTRATION")
-
 
 @app.get("/register")
 def register(email: str):
@@ -45,7 +45,7 @@ def register(email: str):
 @app.get("/confirm")
 def confirm(token: str):
     # Check if the token exists
-    temp_token = db_handler.get_temp_token(token)
+    temp_token: Temp_tokens = db_handler.get_temp_token(token)
     if temp_token is None:
         return {"message": "Invalid token"}
     # Check if the token is expired
